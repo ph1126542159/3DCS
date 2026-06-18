@@ -1,11 +1,12 @@
 # 3DCS Forge Digital Twin Product Design Prototypes
 
-This set is regenerated from the provided Scheme 1 reference image and keeps the same visual system across every main/subwindow prototype.
+Clean HD revision generated from the provided Scheme 1 reference image.
 
-Reference traits preserved:
-- dark blue-black industrial Qt QWidget shell
-- dense ribbon toolbar, model/process tree, central 3D viewport, quality inspector, bottom execution/result tables
-- cyan measurement callouts, status chips, grid floor, translucent process overlays, module telemetry
+Changes in this revision:
+- 2x PNG output with sharpening for clearer viewing
+- removed added scan lines, oversized viewport frames, and extra connector lines
+- preserved the Scheme 1 industrial UI shell consistently across all subwindows
+- only small module labels, active ribbon highlights, status chips, and bottom telemetry differ per page
 
 Files:
 - 00_main_workbench.png - MAIN WORKBENCH
