@@ -1,23 +1,26 @@
 # 3DCS Forge Digital Twin Product Design Prototypes
 
-Redesigned prototype image set for Option 1: Forge Digital Twin.
+This set is regenerated from the provided Scheme 1 reference image and keeps the same visual system across every main/subwindow prototype.
 
-This revision intentionally gives every subpage a distinct visual composition instead of reusing one screen template. The direction targets Qt6 QWidget / Qt3D-ready C++17 desktop software with industrial high-tech styling.
+Reference traits preserved:
+- dark blue-black industrial Qt QWidget shell
+- dense ribbon toolbar, model/process tree, central 3D viewport, quality inspector, bottom execution/result tables
+- cyan measurement callouts, status chips, grid floor, translucent process overlays, module telemetry
 
 Files:
-- 00_main_workbench.png - Main Workbench
-- 01_modeling.png - Modeling And Features
-- 02_moves.png - Moves And Constraints
-- 03_tolerances.png - Tolerances And GD&T
-- 04_measures.png - Measurement Inspection
-- 05_simulation.png - Simulation Compute
-- 06_visualization.png - Visualization Analysis
-- 07_aao.png - AAO Optimization
-- 08_mechanical.png - Mechanical Motion
-- 09_fea_compliant.png - FEA Compliant Assembly
-- 10_reports.png - Reports Publishing
-- 11_cad_integration.png - CAD Integration
-- 12_user_dll.png - User DLL Extensions
-- 13_help_tutorials.png - Help Tutorials
-- 14_system.png - System Settings
+- 00_main_workbench.png - MAIN WORKBENCH
+- 01_modeling.png - MODELING
+- 02_moves.png - MOVES
+- 03_tolerances.png - TOLERANCES
+- 04_measures.png - MEASURES
+- 05_simulation.png - SIMULATION
+- 06_visualization.png - ANALYSIS
+- 07_aao.png - AAO
+- 08_reports.png - REPORTS
+- 09_cad_integration.png - CAD INTEGRATION
+- 10_fea_compliant.png - FEA COMPLIANT
+- 11_mechanical.png - MECHANICAL
+- 12_user_dll.png - USER DLL
+- 13_help_tutorials.png - HELP
+- 14_system.png - SYSTEM
 - 99_contact_sheet.png - overview contact sheet
