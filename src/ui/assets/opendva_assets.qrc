@@ -1,0 +1,27 @@
+<RCC>
+  <qresource prefix="/icons">
+    <file alias="new-model.png">icons/new-model.png</file>
+    <file alias="open-model.png">icons/open-model.png</file>
+    <file alias="save-model.png">icons/save-model.png</file>
+    <file alias="point.png">icons/point.png</file>
+    <file alias="feature.png">icons/feature.png</file>
+    <file alias="tolerance.png">icons/tolerance.png</file>
+    <file alias="gdt.png">icons/gdt.png</file>
+    <file alias="move.png">icons/move.png</file>
+    <file alias="measure.png">icons/measure.png</file>
+    <file alias="variant.png">icons/variant.png</file>
+    <file alias="validate.png">icons/validate.png</file>
+    <file alias="run-simulation.png">icons/run-simulation.png</file>
+    <file alias="batch-processor.png">icons/batch-processor.png</file>
+    <file alias="report.png">icons/report.png</file>
+    <file alias="color-contour.png">icons/color-contour.png</file>
+    <file alias="user-dll.png">icons/user-dll.png</file>
+  </qresource>
+  <qresource prefix="/help">
+    <file alias="3dcs_help_toc.json">help/3dcs_help_toc.json</file>
+  </qresource>
+  <qresource prefix="/qml">
+    <file alias="Main.qml">../qml/Main.qml</file>
+    <file alias="IndustrialViewport3D.qml">../qml/IndustrialViewport3D.qml</file>
+  </qresource>
+</RCC>

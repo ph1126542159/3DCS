@@ -1,0 +1,26 @@
+# Build outputs
+/build/
+/build_ci/
+/build_ui/
+/out/
+*.obj
+*.o
+*.lib
+*.a
+*.exe
+*.dll
+*.so
+*.pdb
+*.ilk
+report.html
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+compile_commands.json
+
+# IDE
+.vs/
+.vscode/
+*.user
+.idea/
