@@ -30,6 +30,9 @@ TEST("qml workbench loads with workbench and feature catalog models") {
                        .toString()
                        .contains(QStringLiteral("3DCS Industrial Workbench")),
                    "QML workbench exposes the industrial workbench title");
+    dvatest::check(root->property("prototypeDirection").toString() ==
+                       QStringLiteral("Neon Assembly Process Twin"),
+                   "QML workbench exposes the selected Product Design prototype direction");
     dvatest::check(root->property("selectedWorkspace").toInt() == 0,
                    "QML workbench starts on the first workspace");
     dvatest::check(workbenchModel.workspaceCount() == 14,
@@ -38,6 +41,18 @@ TEST("qml workbench loads with workbench and feature catalog models") {
         root->findChild<QObject*>(QStringLiteral("industrialQt3DViewport"));
     dvatest::check(viewport != nullptr,
                    "QML workbench exposes the Qt3D industrial viewport");
+    QObject* processTwinRail =
+        root->findChild<QObject*>(QStringLiteral("processTwinRail"));
+    dvatest::check(processTwinRail != nullptr,
+                   "QML workbench exposes the animated process twin rail");
+    QObject* mtmGlassInspector =
+        root->findChild<QObject*>(QStringLiteral("mtmGlassInspector"));
+    dvatest::check(mtmGlassInspector != nullptr,
+                   "QML workbench exposes the glass MTM inspector");
+    QObject* simulationTwinConsole =
+        root->findChild<QObject*>(QStringLiteral("simulationTwinConsole"));
+    dvatest::check(simulationTwinConsole != nullptr,
+                   "QML workbench exposes the simulation twin console");
     QObject* officialHelpTree =
         root->findChild<QObject*>(QStringLiteral("officialHelpTree"));
     dvatest::check(officialHelpTree != nullptr,

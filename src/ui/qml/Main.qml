@@ -11,6 +11,7 @@ ApplicationWindow {
     minimumHeight: 760
     title: "OpenDVA - 3DCS Industrial Workbench"
 
+    property string prototypeDirection: "Neon Assembly Process Twin"
     property int selectedWorkspace: 0
     property var workspace: workbenchModel.get(selectedWorkspace)
     property string selectedCommand: firstCommand(workspace.commands)
@@ -21,16 +22,26 @@ ApplicationWindow {
     property string lastExecution: "No command executed"
     property var lastExecutionRecord: ({ id: "EXEC-0000", status: "Idle", riskLevel: "None", outputCount: 0 })
     property var activityFeed: ["Ready: workbench loaded"]
+    property real twinPulse: 0.0
+    property var processSteps: ["Nominal Build", "Assemble", "Deviate", "Sweep", "Color Contour", "Report"]
     property color bg0: "#070a0d"
-    property color bg1: "#0c1318"
-    property color panel: "#111a20"
-    property color panel2: "#16232b"
-    property color line: "#2a3d47"
+    property color bg1: "#071118"
+    property color panel: "#0d171f"
+    property color panel2: "#111d26"
+    property color line: "#315261"
     property color textMain: "#eef8fb"
     property color textDim: "#8da3ad"
     property color cyan: "#35d7ff"
+    property color violet: "#8d7cff"
+    property color lime: "#8fe388"
     property color amber: "#f0aa4c"
     property color danger: "#ff6d5d"
+
+    SequentialAnimation on twinPulse {
+        loops: Animation.Infinite
+        NumberAnimation { from: 0.0; to: 1.0; duration: 2800; easing.type: Easing.InOutSine }
+        NumberAnimation { from: 1.0; to: 0.0; duration: 2800; easing.type: Easing.InOutSine }
+    }
 
     function selectWorkspace(row) {
         if (row >= 0 && row < workbenchModel.workspaceCount) {
@@ -271,19 +282,40 @@ ApplicationWindow {
         return parts.join(":")
     }
 
-    background: Rectangle {
-        color: bg0
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "#111a20" }
-            GradientStop { position: 0.45; color: "#071014" }
-            GradientStop { position: 1.0; color: "#0b0d10" }
+    background: Item {
+        Rectangle {
+            anchors.fill: parent
+            color: bg0
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "#121d27" }
+                GradientStop { position: 0.45; color: "#061017" }
+                GradientStop { position: 1.0; color: "#090b0f" }
+            }
+        }
+        Repeater {
+            model: 28
+            Rectangle {
+                x: index * 56
+                y: 0
+                width: 1
+                height: parent.height
+                color: "#16313b"
+                opacity: index % 4 === 0 ? 0.20 : 0.08
+            }
+        }
+        Rectangle {
+            width: parent.width
+            height: 2
+            y: 120 + root.twinPulse * Math.max(1, parent.height - 160)
+            color: cyan
+            opacity: 0.10
         }
     }
 
     header: Rectangle {
-        height: 128
-        color: "#0b1116"
-        border.color: "#253942"
+        height: 132
+        color: "#091017ee"
+        border.color: "#315261"
 
         ColumnLayout {
             anchors.fill: parent
@@ -313,9 +345,30 @@ ApplicationWindow {
                         font.weight: Font.DemiBold
                     }
                     Text {
-                        text: "Qt6 QML + Qt3D ready interface for modeling, MTM, simulation, AAO, Mechanical, FEA and reporting"
+                        text: root.prototypeDirection + " / Qt6 QML + Qt3D / doc-driven Modeling, MTM, Simulation, Visualization, AAO, Mechanical, FEA"
                         color: textDim
                         font.pixelSize: 12
+                    }
+                }
+
+                RowLayout {
+                    spacing: 6
+                    Repeater {
+                        model: ["QML Motion", "Qt3D Twin", "Color Contour"]
+                        delegate: Rectangle {
+                            required property string modelData
+                            Layout.preferredWidth: Math.max(86, modelData.length * 7 + 18)
+                            Layout.preferredHeight: 28
+                            radius: 4
+                            color: "#101d26"
+                            border.color: index === 1 ? violet : "#315261"
+                            Text {
+                                anchors.centerIn: parent
+                                text: modelData
+                                color: index === 1 ? "#d9d4ff" : "#b8c8cf"
+                                font.pixelSize: 10
+                            }
+                        }
                     }
                 }
 
@@ -677,6 +730,68 @@ ApplicationWindow {
                 }
 
                 Rectangle {
+                    id: processTwinRail
+                    objectName: "processTwinRail"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 18
+                    width: Math.min(parent.width - 520, 610)
+                    height: 74
+                    radius: 5
+                    color: "#071219cc"
+                    border.color: "#315261"
+
+                    Rectangle {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: 38
+                        anchors.rightMargin: 38
+                        height: 1
+                        color: "#315261"
+                    }
+
+                    Repeater {
+                        model: root.processSteps
+                        delegate: Item {
+                            required property int index
+                            required property string modelData
+                            property bool activeStep: index <= Math.floor(root.twinPulse * (root.processSteps.length - 1))
+                            x: 20 + index * ((processTwinRail.width - 40) / Math.max(1, root.processSteps.length - 1)) - 38
+                            y: 8
+                            width: 76
+                            height: 58
+
+                            Rectangle {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                y: 3
+                                width: activeStep ? 20 : 14
+                                height: activeStep ? 20 : 14
+                                radius: width / 2
+                                color: activeStep ? cyan : "#15242c"
+                                border.color: activeStep ? "#bff6ff" : "#3a5662"
+                                opacity: activeStep ? 0.96 : 0.78
+                                Behavior on width { NumberAnimation { duration: 180 } }
+                                Behavior on height { NumberAnimation { duration: 180 } }
+                            }
+                            Text {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.top: parent.top
+                                anchors.topMargin: 28
+                                text: modelData
+                                color: activeStep ? textMain : textDim
+                                font.pixelSize: 9
+                                horizontalAlignment: Text.AlignHCenter
+                                elide: Text.ElideRight
+                                maximumLineCount: 2
+                                wrapMode: Text.WordWrap
+                            }
+                        }
+                    }
+                }
+
+                Rectangle {
                     anchors.left: parent.left
                     anchors.top: parent.top
                     anchors.margins: 18
@@ -767,11 +882,13 @@ ApplicationWindow {
             }
 
             Rectangle {
+                id: simulationTwinConsole
+                objectName: "simulationTwinConsole"
                 Layout.fillWidth: true
-                Layout.preferredHeight: 320
+                Layout.preferredHeight: 332
                 radius: 5
-                color: panel
-                border.color: line
+                color: "#0b151dcc"
+                border.color: "#315261"
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -788,11 +905,12 @@ ApplicationWindow {
                             Layout.fillWidth: true
                         }
                         Repeater {
-                            model: String(workspace.workflow).split("|")
+                            model: ["Summary", "Histogram", "Samples", "Contributor", "Batch", "Report"]
                             delegate: Button {
                                 text: modelData
                                 height: 30
                                 flat: true
+                                highlighted: index === 0 || modelData === "Contributor" && commandView.viewType === "matrix"
                             }
                         }
                     }
@@ -859,6 +977,19 @@ ApplicationWindow {
                                             color: "#17313d"
                                             border.color: cyan
                                         }
+                                    }
+                                }
+                                Rectangle {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 6
+                                    radius: 3
+                                    color: "#142630"
+                                    Rectangle {
+                                        width: parent.width * (0.28 + root.twinPulse * 0.62)
+                                        height: parent.height
+                                        radius: 3
+                                        color: commandView.viewType === "simulation" ? cyan :
+                                               commandView.viewType === "optimizer" ? amber : violet
                                     }
                                 }
                                 RowLayout {
@@ -986,11 +1117,13 @@ ApplicationWindow {
         }
 
         Rectangle {
+            id: mtmGlassInspector
+            objectName: "mtmGlassInspector"
             Layout.preferredWidth: 326
             Layout.fillHeight: true
             radius: 5
-            color: panel2
-            border.color: line
+            color: "#0f1b25dd"
+            border.color: "#385b68"
 
             ColumnLayout {
                 anchors.fill: parent
@@ -1015,6 +1148,20 @@ ApplicationWindow {
                             text: workspace.status
                             color: root.statusColor(workspace.status)
                             font.pixelSize: 12
+                        }
+                    }
+                    Rectangle {
+                        Layout.preferredWidth: 56
+                        Layout.preferredHeight: 24
+                        radius: 4
+                        color: "#102a34"
+                        border.color: root.viewportAccent(commandView.viewType ? commandView.viewType : "metrics")
+                        Text {
+                            anchors.centerIn: parent
+                            text: commandView.viewType ? commandView.viewType.toUpperCase() : "MTM"
+                            color: textMain
+                            font.pixelSize: 9
+                            elide: Text.ElideRight
                         }
                     }
                 }
@@ -1101,7 +1248,29 @@ ApplicationWindow {
                     }
                 }
 
-                Text { text: "MTM / Property Editor"; color: cyan; font.pixelSize: 13; font.weight: Font.DemiBold }
+                RowLayout {
+                    Layout.fillWidth: true
+                    Text {
+                        text: "MTM / Glass Inspector"
+                        color: cyan
+                        font.pixelSize: 13
+                        font.weight: Font.DemiBold
+                        Layout.fillWidth: true
+                    }
+                    Rectangle {
+                        Layout.preferredWidth: 72
+                        Layout.preferredHeight: 20
+                        radius: 3
+                        color: "#111d24"
+                        border.color: "#33505c"
+                        Text {
+                            anchors.centerIn: parent
+                            text: "Live bind"
+                            color: lime
+                            font.pixelSize: 9
+                        }
+                    }
+                }
                 GridLayout {
                     Layout.fillWidth: true
                     columns: 2

@@ -14,6 +14,7 @@ Item {
     property string viewType: "metrics"
     property string statusLabel: "Ready"
     property real activityPulse: 0.0
+    property real scanPhase: 0.0
     property real motionScale: viewType === "simulation" || viewType === "viewport" ? 1.8
                                : viewType === "move" || viewType === "cad" ? 1.1
                                : viewType === "matrix" || viewType === "gdt" ? 0.75
@@ -23,6 +24,14 @@ Item {
         loops: Animation.Infinite
         NumberAnimation { from: -1.0; to: 1.0; duration: 2600; easing.type: Easing.InOutSine }
         NumberAnimation { from: 1.0; to: -1.0; duration: 2600; easing.type: Easing.InOutSine }
+    }
+
+    NumberAnimation on scanPhase {
+        loops: Animation.Infinite
+        from: 0.0
+        to: 1.0
+        duration: 3600
+        easing.type: Easing.InOutSine
     }
 
     Rectangle {
@@ -162,6 +171,29 @@ Item {
             }
 
             Entity {
+                id: deviationHalo
+                components: [
+                    TorusMesh {
+                        radius: 2.9
+                        minorRadius: 0.018
+                        rings: 72
+                        slices: 12
+                    },
+                    PhongMaterial {
+                        diffuse: viewType === "optimizer" || viewType === "gdt" ? warningColor : accentColor
+                        ambient: "#0a3038"
+                        specular: "#e8fbff"
+                        shininess: 100
+                    },
+                    Transform {
+                        translation: Qt.vector3d(0.15, 0.34, 0.18)
+                        rotationX: 90
+                        rotationY: 8 + root.activityPulse * root.motionScale * 8
+                    }
+                ]
+            }
+
+            Entity {
                 id: locatorA
                 components: [
                     SphereMesh { radius: 0.18 },
@@ -191,6 +223,69 @@ Item {
                         translation: Qt.vector3d(3.1, 0.72, 1.95)
                     }
                 ]
+            }
+        }
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        color: "transparent"
+        border.color: "#1e4652"
+        opacity: 0.75
+    }
+
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        y: 28 + root.scanPhase * Math.max(1, parent.height - 72)
+        height: 2
+        color: accentColor
+        opacity: 0.22
+    }
+
+    Item {
+        anchors.centerIn: parent
+        width: Math.min(parent.width, parent.height) * 0.56
+        height: width
+        Repeater {
+            model: 3
+            Rectangle {
+                anchors.centerIn: parent
+                width: parent.width - index * 74 + root.activityPulse * 18
+                height: width
+                radius: width / 2
+                color: "transparent"
+                border.color: index === 1 ? warningColor : accentColor
+                border.width: 1
+                opacity: 0.10 + index * 0.05
+            }
+        }
+    }
+
+    Row {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 12
+        spacing: 6
+        Repeater {
+            model: [
+                "MC seed locked",
+                "GF²σ² map",
+                "6DOF solve",
+                "HST/HLM ready"
+            ]
+            Rectangle {
+                width: Math.max(78, modelData.length * 6 + 16)
+                height: 22
+                radius: 3
+                color: "#101921cc"
+                border.color: index === 1 ? warningColor : "#2b4652"
+                Text {
+                    anchors.centerIn: parent
+                    text: modelData
+                    color: index === 1 ? "#ffe1a9" : "#bdd0d7"
+                    font.pixelSize: 9
+                }
             }
         }
     }
